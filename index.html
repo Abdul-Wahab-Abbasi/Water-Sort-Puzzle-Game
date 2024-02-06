@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 600px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            background-color: rgb(222, 227, 232);
+            border: 1px solid rgb(31, 30, 30);
+            border-radius: 15px;
+        }
+
+        .container .bottle {
+            border: 1px solid gray;
+            border-radius: 0px 0px 10px 10px;
+            width: 10%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            overflow: hidden;
+        }
+
+        .container .bottle .color {
+            height: 30%;
+            width: 100%;
+        }
+
+        .container .bottleActive {
+            transition: all 0.2s linear;
+            border: 2px solid rgb(242, 64, 64);
+        }
+
+        .container .bottleSelect {
+            transition: all 0.2s linear;
+            border: 2px solid rgb(64, 242, 186);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="red">
+            </div>
+            <div class="color">
+                <input type="hidden" value="blue">
+            </div>
+            <div class="color">
+                <input type="hidden" value="green">
+            </div>
+        </div>
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="yellow">
+            </div>
+            <div class="color">
+                <input type="hidden" value="green">
+
+            </div>
+            <div class="color">
+                <input type="hidden" value="blue">
+            </div>
+        </div>
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="blue">
+            </div>
+            <div class="color">
+                <input type="hidden" value="purple">
+            </div>
+            <div class="color">
+                <input type="hidden" value="yellow">
+            </div>
+        </div>
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="purple">
+            </div>
+            <div class="color">
+                <input type="hidden" value="red">
+            </div>
+            <div class="color">
+                <input type="hidden" value="purple">
+            </div>
+        </div>
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="red">
+            </div>
+            <div class="color">
+                <input type="hidden" value="yellow">
+            </div>
+            <div class="color">
+                <input type="hidden" value="green">
+            </div>
+        </div>
+        <div class="bottle">
+            <div class="color">
+                <input type="hidden" value="transparent">
+            </div>
+        </div>
+    </div>
+    <script>
+        let bottles = document.querySelectorAll('.bottle');
+        let colors = document.querySelectorAll('.color');
+        let clickCount = 0;
+        function colorFiller() {
+            for (let j = 0; j < colors.length; j++) {
+                let bgColor = colors[j].querySelector('input')
+                colors[j].style.backgroundColor = bgColor.value;
+            }
+        }
+        colorFiller();
+       
+
+        bottles.forEach(bottle => {
+            bottle.onclick = () => {
+                if (clickCount < 1) {
+                    clickCount += 1;
+
+                    bottle.classList.add('bottleActive');
+                    for (i = 0; i < bottles.length; i++) {
+                        bottles[i].classList.remove('bottleSelect');
+                    }
+                } else {
+                    clickCount -= 1;
+                    if (bottle.classList.contains('bottleActive')) {
+                        bottle.classList.remove('bottleActive');
+                    } else {
+                        bottle.classList.add('bottleSelect');
+                        let activeBottleValue = document.querySelector('.bottleActive').children[0].children[0];
+                        let selectedBottleValue = document.querySelector('.bottleSelect').children[0].children[0];
+                        let activeBottle = document.querySelector('.bottleActive');
+                        let selectedBottle = document.querySelector('.bottleSelect');
+                        if ((activeBottleValue.value === selectedBottleValue.value && selectedBottle.children.length < 3) || selectedBottleValue.value == 'transparent') {
+                            if (selectedBottleValue.value == 'transparent') {
+                                selectedBottle.children[0].remove();
+                            }
+                            let colorElement = document.createElement('div');
+                            colorElement.className = 'color';
+                            let colorElementInput = document.createElement('input');
+                            colorElementInput.setAttribute('type', 'hidden');
+                            colorElementInput.setAttribute('value', activeBottleValue.value);
+                            colorElement.appendChild(colorElementInput);
+                            selectedBottle.insertBefore(colorElement, selectedBottle.firstChild);
+                            if (activeBottle.children.length == 1) {
+                                colorElement.style.backgroundColor = activeBottleValue.value;
+                                activeBottleValue.value = 'transparent';
+                                activeBottle.children[0].style.backgroundColor = 'transparent';
+                            } else {
+                                activeBottle.children[0].remove();
+                                colorElement.style.backgroundColor = activeBottleValue.value;
+                            }
+                        } else {
+                            alert('not match')
+                        }
+                        for (i = 0; i < bottles.length; i++) {
+                            bottles[i].classList.remove('bottleActive');
+                        }
+                       
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
